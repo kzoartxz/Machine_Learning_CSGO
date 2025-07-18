@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>🔫 Predicción CS:GO</title>
+    <link rel="stylesheet" href="/app/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🔫 Predicción CS:GO</h1>
+        <form id="formulario">
+            <input type="number" step="any" id="Distancia" placeholder="Distancia" min="0" required>
+            <input type="number" step="any" id="TeamStartingEquipmentValue" placeholder="Equipo inicial (valor)" min="0" required>
+            <input type="number" step="any" id="RoundStartingEquipmentValue" placeholder="Valor ronda" min="0" required>
+            <input type="number" step="1" id="Granadas" placeholder="Granadas usadas" min="0" required>
+            <input type="number" step="any" id="Participacion_Kills" placeholder="Participación en kills" min="0" required>
+
+            <button type="submit">🧠 Predecir</button>
+        </form>
+
+        <div class="resultados">
+            <h2>🧠 Resultados:</h2>
+            <p><strong>Tiempo estimado:</strong> <span id="resultado-tiempo">--</span></p>
+            <p><strong>¿Sobrevive más de 70s?:</strong> <span id="resultado-sobrevive">--</span></p>
+        </div>
+    </div>
+
+    <script src="/app/script.js"></script>
+</body>
+</html>
