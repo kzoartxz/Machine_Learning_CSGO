@@ -1,14 +1,13 @@
 document.getElementById("formulario").addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Capturar los valores del formulario
+    // Capturar valores
     const Distancia = parseFloat(document.getElementById("Distancia").value);
     const TeamStartingEquipmentValue = parseFloat(document.getElementById("TeamStartingEquipmentValue").value);
     const RoundStartingEquipmentValue = parseFloat(document.getElementById("RoundStartingEquipmentValue").value);
     const Granadas = parseInt(document.getElementById("Granadas").value);
     const Participacion_Kills = parseFloat(document.getElementById("Participacion_Kills").value);
 
-    // Datos para cada modelo
     const datosRegresion = {
         Distancia,
         TeamStartingEquipmentValue,
@@ -21,30 +20,30 @@ document.getElementById("formulario").addEventListener("submit", async (e) => {
         Distancia,
         TeamStartingEquipmentValue,
         RoundStartingEquipmentValue,
-        Granadas // ❗️ No se incluye Participacion_Kills
+        Granadas
     };
 
     try {
-        // Llamada al endpoint de regresión
         const resTiempo = await fetch("/predecir-tiempo", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(datosRegresion)
         });
-        const dataTiempo = await resTiempo.json();
 
-        // Llamada al endpoint de clasificación
         const resSobrevive = await fetch("/predecir-sobrevive", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(datosClasificacion)
         });
+
+        const dataTiempo = await resTiempo.json();
         const dataSobrevive = await resSobrevive.json();
 
-        // Mostrar resultados en pantalla
         document.getElementById("resultado-tiempo").textContent = `${dataTiempo.tiempo_estimado} segundos`;
         document.getElementById("resultado-sobrevive").textContent = `${dataSobrevive.interpretacion}`;
     } catch (error) {
-        console.error("Error al predecir:", error);
+        console.error("Error en la predicción:", error);
+        document.getElementById("resultado-tiempo").textContent = `Error`;
+        document.getElementById("resultado-sobrevive").textContent = `Error`;
     }
 });

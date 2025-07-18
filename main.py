@@ -4,22 +4,22 @@ import joblib
 import numpy as np
 from fastapi.staticfiles import StaticFiles
 
-# ==== Cargar modelos desde carpeta 'modelos' ====
-modelo_regresion = joblib.load("modelos/modelo_arbol_ultra_plus.pkl")
-modelo_clasificacion = joblib.load("modelos/modelo_clasificacion_rf.pkl")
+# ==== Cargar modelos desde carpeta 'models' ====
+modelo_regresion = joblib.load("models/modelo_arbol_ultra_plus.pkl")
+modelo_clasificacion = joblib.load("models/modelo_clasificacion_rf.pkl")
 
 # ==== Inicializar app con custom info ====
 app = FastAPI(
     title="API de Predicciones CSGO",
     description="🎯 API para predecir el tiempo de supervivencia y clasificación de jugadores en CS:GO usando modelos de ML.",
     version="1.0.0",
-    docs_url="/api",  # URL personalizada para Swagger UI
+    docs_url="/api"
 )
 
-# ==== Montar frontend estático ====
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+# ==== Montar frontend estático en /app (¡NO en "/") ====
+app.mount("/app", StaticFiles(directory="static", html=True), name="static")
 
-# ==== Entrada completa para el modelo de regresión ====
+# ==== Entrada para regresión ====
 class DatosEntradaRegresion(BaseModel):
     Distancia: float
     TeamStartingEquipmentValue: float
@@ -27,15 +27,15 @@ class DatosEntradaRegresion(BaseModel):
     Granadas: int
     Participacion_Kills: float
 
-# ==== Entrada reducida para el modelo de clasificación ====
+# ==== Entrada para clasificación ====
 class DatosEntradaClasificacion(BaseModel):
     Distancia: float
     TeamStartingEquipmentValue: float
     RoundStartingEquipmentValue: float
     Granadas: int
 
-# ==== Ruta para predecir tiempo (regresión) ====
-@app.post("/predecir-tiempo", summary="Predecir Tiempo de Sobrevivencia (Regresión)")
+# ==== Endpoint de regresión ====
+@app.post("/predecir-tiempo")
 def predecir_tiempo(datos: DatosEntradaRegresion):
     entrada = np.array([[ 
         datos.Distancia,
@@ -50,8 +50,8 @@ def predecir_tiempo(datos: DatosEntradaRegresion):
         "unidad": "segundos"
     }
 
-# ==== Ruta para predecir si sobrevive (clasificación) ====
-@app.post("/predecir-sobrevive", summary="Predecir si Sobrevive más de 70s (Clasificación)")
+# ==== Endpoint de clasificación ====
+@app.post("/predecir-sobrevive")
 def predecir_sobrevive(datos: DatosEntradaClasificacion):
     entrada = np.array([[ 
         datos.Distancia,
